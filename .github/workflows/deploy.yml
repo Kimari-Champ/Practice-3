@@ -70,7 +70,7 @@ jobs:
         shell: cmd
         run: |
           echo running database test...
-          docker compose exec -T db psql -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} --command "SELECT COUNT(*) FROM items;"
+          docker compose exec -T db psql postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/${{ secrets.DB_NAME }} --command "SELECT COUNT(*) FROM items;"
 
       - name: Create test report
         if: always()
