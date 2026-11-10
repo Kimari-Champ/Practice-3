@@ -17,61 +17,61 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create .env file from secrets
+        shell: cmd
         run: |
-          echo "Creating env file from GitHub Secrets..."
-          cat << EOF > .env
-          DB_HOST=${{ secrets.DB_HOST }}
-          DB_PORT=${{ secrets.DB_PORT }}
-          DB_NAME=${{ secrets.DB_NAME }}
-          DB_USER=${{ secrets.DB_USER }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          APP_PORT=${{ secrets.APP_PORT }}
-          APP_SECRET=${{ secrets.APP_SECRET }}
-          API_KEY=${{ secrets.API_KEY }}
-          COMPOSE_PROJECT_NAME=${{ env.COMPOSE_PROJECT_NAME }}
-          EOF
-          echo ".env file created successfully"
+          echo DB_HOST=${{ secrets.DB_HOST }} > .env
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          echo DB_USER=${{ secrets.DB_USER }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+          echo APP_PORT=${{ secrets.APP_PORT }} >> .env
+          echo APP_SECRET=${{ secrets.APP_SECRET }} >> .env
+          echo API_KEY=${{ secrets.API_KEY }} >> .env
+          echo COMPOSE_PROJECT_NAME=${{ env.COMPOSE_PROJECT_NAME }} >> .env
+          echo .env file created successfully
 
       - name: Deploy with Docker Compose
+        shell: cmd
         run: |
-          echo "Starting application stack..."
+          echo Starting application stack...
           docker compose up -d --build
-          echo "Waiting for services to start..."
-          sleep 15
+          timeout /t 15 /nobreak
 
       - name: Verify containers are running
+        shell: cmd
         run: |
-          if docker compose ps | grep -q "Up"; then
-            echo "All containers are running"
-          else
-            echo "Some containers failed to start"
+          docker compose ps
+          docker compose ps | findstr "Up" >nul
+          if errorlevel 1 (
+            echo Some containers failed to start
             docker compose logs
             exit 1
-          fi
+          ) else (
+            echo All containers are running
+          )
 
       - name: Run application tests
+        shell: cmd
         run: |
-          echo "Running application tests..."
-          if curl -f http://localhost:${{ secrets.APP_PORT }}/; then
-            echo "Web application is healthy"
-          else
-            echo "Web application health check failed"
+          echo Running application tests...
+          curl -f http://localhost:${{ secrets.APP_PORT }}/
+          if errorlevel 1 (
+            echo Web application health check failed
             exit 1
-          fi
-
-          DB_COUNT=$(docker compose exec -T db psql -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -t -c "SELECT COUNT(*) FROM items;" | tr -d ' \r\n' || echo "0")
-          echo "Database records count: $DB_COUNT"
+          ) else (
+            echo Web application is healthy
+          )
+          docker compose exec -T db psql -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -t -c "SELECT COUNT(*) FROM items;"
 
       - name: Create test report
         if: always()
+        shell: cmd
         run: |
-          cat > test-report.md << EOF
-          # Deployment Test Report
-          Date: $(date)
-          Application: Healthy
-          Database: Connected
-          Containers: Running
-          EOF
+          echo # Deployment Test Report > test-report.md
+          echo Date: %DATE% %TIME% >> test-report.md
+          echo Application: Healthy >> test-report.md
+          echo Database: Connected >> test-report.md
+          echo Containers: Running >> test-report.md
           docker compose logs > deployment-logs.txt
 
       - name: Save artifacts
@@ -86,4 +86,5 @@ jobs:
 
       - name: Cleanup stack
         if: always()
+        shell: cmd
         run: docker compose down
