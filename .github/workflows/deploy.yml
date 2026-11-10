@@ -66,7 +66,7 @@ jobs:
           ) else (
             echo Web application is healthy
           )
-          docker compose exec -T db psql -h locaclhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} --command "SELECT COUNT(*) FROM items;"
+          docker compose exec -T db psql -h localhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} --command "SELECT COUNT(*) FROM items;"
 
       - name: Create test report
         if: always()
