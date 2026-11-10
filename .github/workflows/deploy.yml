@@ -33,9 +33,11 @@ jobs:
       - name: Deploy with Docker Compose
         shell: cmd
         run: |
+          echo Cleaning up old containers...
+          docker compose down --remove-orphans
           echo Starting application stack...
           docker compose up -d --build
-          timeout /t 15 /nobreak
+          timeout /t 30 /nobreak
 
       - name: Verify containers are running
         shell: cmd
