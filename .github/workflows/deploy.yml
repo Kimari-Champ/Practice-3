@@ -29,7 +29,21 @@ jobs:
           echo API_KEY=${{ secrets.API_KEY }} >> .env
           echo COMPOSE_PROJECT_NAME=${{ env.COMPOSE_PROJECT_NAME }} >> .env
           echo .env file created successfully
+      - name: Save Docker status snapshot
+        shell: cmd
+        run: |
+          docker compose ps > docker-status.txt
 
+      - name: Save artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-artifacts
+          path: |
+            .env.example
+            docker-status.txt
+            test-report.md
+            deployment-logs.txt
+          retention-days: 30
       - name: Deploy with Docker Compose
         shell: cmd
         run: |
