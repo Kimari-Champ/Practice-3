@@ -44,7 +44,7 @@ jobs:
         shell: cmd
         run: |
           echo Waiting for services to start and pass healthchecks...
-          powershell -Command "Start-Sleep -Seconds 20"
+          timeout /t 20 /nobreak >nul
           docker compose ps
           docker compose ps | findstr "Up" >nul
           if errorlevel 1 (
@@ -59,7 +59,7 @@ jobs:
         shell: cmd
         run: |
           echo Running application tests...
-          curl -f http://localhost:${{ secrets.APP_PORT }}/ || curl -f http://localhost:${{ secrets.APP_PORT }}/health
+          curl -f http://localhost:8080/ || curl -f http://localhost:8080/health
           if errorlevel 1 (
             echo X Web application health check failed
             exit 1
