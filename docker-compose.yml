@@ -33,8 +33,8 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 3s
-      retries: 20
-      start_period: 40s
+      retries: 30
+      start_period: 60s
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d:ro
