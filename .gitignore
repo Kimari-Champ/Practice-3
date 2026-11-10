@@ -6,3 +6,4 @@ backend/main
 .DS_Store
 Thumbs.debug
 .docker/
+actions-runner/
