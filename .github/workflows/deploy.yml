@@ -38,7 +38,7 @@ jobs:
           echo Starting application stack...
           docker compose up -d --build
           echo Waiting for database initialization...
-          timeout /t 30 /nobreak >nul
+          timeout /t 45 /nobreak 
 
       - name: Verify containers are running
         shell: cmd
