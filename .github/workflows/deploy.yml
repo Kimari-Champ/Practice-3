@@ -66,6 +66,10 @@ jobs:
           ) else (
             echo Web application is healthy
           )
+      - name : Run database query test
+        shell: cmd
+        run: |
+          echo running database test...
           docker compose exec -T db psql -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} --command "SELECT COUNT(*) FROM items;"
 
       - name: Create test report
