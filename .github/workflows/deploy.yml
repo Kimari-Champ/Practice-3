@@ -34,7 +34,7 @@ jobs:
         shell: cmd
         run: |
           echo Force Cleaning previous containers...
-          docker compose down --volumes --remove-orphans
+          docker compose down -v --remove-orphans
           echo Starting application stack...
           docker compose up -d --build
 
