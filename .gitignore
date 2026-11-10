@@ -1,0 +1,8 @@
+.env
+.log
+npm-debug.log*
+/backend/out/
+backend/main
+.DS_Store
+Thumbs.debug
+.docker/

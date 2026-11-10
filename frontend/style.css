@@ -1,0 +1,4 @@
+body { font-family: sans-serif; background: #eef2f5; display: flex; justify-content: center; padding-top: 50px; }
+.card { background: #fff; padding: 20px 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; }
+h2 { color: #333; margin-bottom: 15px; }
+ul { list-style-type: square; padding-left: 20px; color: #555; }
