@@ -35,7 +35,7 @@ jobs:
         run: |
           echo Force Cleaning previous containers...
           docker compose down --volumes --remove-orphans
-          docker rm -f app-db app2>nul
+          docker rm -f app-db app2>nul & exit 0
           echo Starting application stack...
           docker compose up -d --build
           timeout /t 30 /nobreak
