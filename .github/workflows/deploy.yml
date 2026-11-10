@@ -37,6 +37,8 @@ jobs:
           docker compose down -v --remove-orphans
           echo Starting application stack...
           docker compose up -d --build
+          echo Waiting for database initialization...
+          timeout /t 15 /nobreak
 
       - name: Verify containers are running
         shell: cmd
